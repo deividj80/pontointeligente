@@ -1,6 +1,6 @@
 package com.reis.pontointeligente.dtos
 
-import javax.validation.constraints.NotEmpty
+import org.hibernate.validator.constraints.NotEmpty
 
 data class LancamentoDto(
         @get:NotEmpty(message = "Data não pode ser vazia.")

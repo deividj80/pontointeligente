@@ -1,10 +1,11 @@
 package com.reis.pontointeligente.dtos
 
+import org.hibernate.validator.constraints.Email
 import org.hibernate.validator.constraints.Length
+import org.hibernate.validator.constraints.NotEmpty
 import org.hibernate.validator.constraints.br.CNPJ
 import org.hibernate.validator.constraints.br.CPF
-import javax.validation.constraints.Email
-import javax.validation.constraints.NotEmpty
+
 
 data class CadastroPFDto (
         @get:NotEmpty(message = "Nome não pode ser vazio.")

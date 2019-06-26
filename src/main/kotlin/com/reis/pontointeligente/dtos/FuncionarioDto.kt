@@ -1,8 +1,8 @@
 package com.reis.pontointeligente.dtos
 
+import org.hibernate.validator.constraints.Email
 import org.hibernate.validator.constraints.Length
-import javax.validation.constraints.Email
-import javax.validation.constraints.NotEmpty
+import org.hibernate.validator.constraints.NotEmpty
 
 data class FuncionarioDto (
         @get:NotEmpty(message = "Nome não pode ser vazio.")
