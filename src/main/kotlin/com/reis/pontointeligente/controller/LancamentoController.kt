@@ -8,13 +8,13 @@ import com.reis.pontointeligente.response.Response
 import com.reis.pontointeligente.services.FuncionarioService
 import com.reis.pontointeligente.services.LancamentoService
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
 import org.springframework.validation.ObjectError
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.text.SimpleDateFormat
 import javax.validation.Valid
 
@@ -45,7 +45,44 @@ class LancamentoController(val lancamentoService: LancamentoService,
         return ResponseEntity.ok(response)
     }
 
+    @GetMapping("/{id}")
+    fun lancamentoById(@PathVariable("id") id: String): ResponseEntity<Response<LancamentoDto>> {
+
+        val response: Response<LancamentoDto> = Response<LancamentoDto>()
+
+        val lancamento: Lancamento? = lancamentoService.buscarPorId(id)
+
+        if (lancamento == null) {
+            response.erros.add("Lançamento não encontrado para o id $id")
+            return ResponseEntity.badRequest().body(response)
+        }
+
+        response.data = converterLancamentoDto(lancamento)
+        return ResponseEntity.ok(response)
+    }
+
+    @GetMapping(value = "/funcionario/{funcionarioId}")
+    fun listarByFuncionarioId(@PathVariable("funcionarioId") funcionarioId: String,
+                              @RequestParam(value = "pag", defaultValue = "0") pag: Int,
+                              @RequestParam(value = "ord", defaultValue = "id") ord: String,
+                              @RequestParam(value = "dir", defaultValue = "DESC") dir: String
+    ): ResponseEntity<Response<Page<LancamentoDto>>> {
+
+        val response: Response<Page<LancamentoDto>> = Response<Page<LancamentoDto>>()
+        val pageRequest: PageRequest = PageRequest(pag, qtdPorPagina, Sort.Direction.valueOf(dir), ord)
+
+        val lancamentos: Page<Lancamento> = lancamentoService.buscarPorFuncionarioId(funcionarioId, pageRequest)
+
+        val lancamentoDto: Page<LancamentoDto> = lancamentos.map { lancamento -> converterLancamentoDto(lancamento) }
+
+        response.data = lancamentoDto
+
+        return ResponseEntity.ok(response)
+
+    }
+
     private fun validarFuncionario(lancamentoDto: LancamentoDto, result: BindingResult) {
+
         if (lancamentoDto.funcionarioId == null) {
             result.addError(ObjectError("funcionario", "Funcionário não informado."))
             return

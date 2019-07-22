@@ -36,7 +36,7 @@ class FuncionarioServiceTest {
     @Throws(Exception::class)
     fun setUp() {
         BDDMockito.given(funcionarioRepository?.save(Mockito.any(Funcionario::class.java))).willReturn(funcionario())
-        BDDMockito.given(funcionarioRepository?.findById(id)).willReturn(funcionarios())
+        BDDMockito.given(funcionarioRepository?.findOne(id)).willReturn(funcionario())
         BDDMockito.given(funcionarioRepository?.findByCpf(cpf)).willReturn(funcionario())
         BDDMockito.given(funcionarioRepository?.findByEmail(email)).willReturn(funcionario())
 
