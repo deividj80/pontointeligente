@@ -17,7 +17,5 @@ class LancamentoServiceImpl(val lancamentoRepository: LancamentoRepository) : La
 
     override fun persistir(lancamento: Lancamento): Lancamento = lancamentoRepository.save(lancamento)
 
-    override fun remover(id: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun remover(id: String) = lancamentoRepository.delete(id)
 }
